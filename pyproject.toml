@@ -1,0 +1,52 @@
+[build-system]
+requires = [ "setuptools",]
+build-backend = "setuptools.build_meta"
+
+[project]
+requires-python = ">=3.9"
+name = "project_infnet_engenharia_de_machine_learning"
+readme = "README.md"
+dynamic = [ "version",]
+dependencies = [
+ "ipython>=8.10",
+ "jupyterlab>=3.0",
+ "notebook",
+ "kedro~=0.19.12",
+ "kedro-viz>=11.0.0",
+]
+
+[project.scripts]
+project-infnet-engenharia-de-machine-learning = "project_infnet_engenharia_de_machine_learning.__main__:main"
+
+[project.optional-dependencies]
+docs = [ "docutils<0.21", "sphinx>=5.3,<7.3", "sphinx_rtd_theme==2.0.0", "nbsphinx==0.8.1", "sphinx-autodoc-typehints==1.20.2", "sphinx_copybutton==0.5.2", "ipykernel>=5.3, <7.0", "Jinja2<3.2.0", "myst-parser>=1.0,<2.1",]
+dev = [ "pytest-cov~=3.0", "pytest-mock>=1.7.1, <2.0", "pytest~=7.2", "ruff~=0.1.8",]
+
+[tool.kedro]
+package_name = "project_infnet_engenharia_de_machine_learning"
+project_name = "project-infnet-engenharia-de-machine-learning"
+kedro_init_version = "0.19.12"
+tools = "['Linting', 'Documentation', 'Data Structure']"
+example_pipeline = "False"
+source_dir = "src"
+
+[tool.ruff]
+line-length = 88
+show-fixes = true
+select = [ "F", "W", "E", "I", "UP", "PL", "T201",]
+ignore = [ "E501",]
+
+[project.entry-points."kedro.hooks"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.setuptools.dynamic.version]
+attr = "project_infnet_engenharia_de_machine_learning.__version__"
+
+[tool.setuptools.packages.find]
+where = [ "src",]
+namespaces = false
+
+[tool.kedro_telemetry]
+project_id = "ce3ce24935d7450fb1e1a89a4f82e4ed"
