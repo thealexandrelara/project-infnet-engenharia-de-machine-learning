@@ -2,3 +2,6 @@ ipython>=8.10
 jupyterlab>=3.0
 kedro~=0.19.12
 notebook
+kedro-datasets>=4.1.0
+pyarrow>=19.0.1
+fastparquet>=2024.11.0

@@ -13,6 +13,9 @@ dependencies = [
  "notebook",
  "kedro~=0.19.12",
  "kedro-viz>=11.0.0",
+ "kedro-datasets>=4.1.0",
+ "pyarrow>=19.0.1",
+ "fastparquet>=2024.11.0",
 ]
 
 [project.scripts]
