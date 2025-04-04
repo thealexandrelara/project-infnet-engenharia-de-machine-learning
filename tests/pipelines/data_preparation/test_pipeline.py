@@ -1,5 +1,5 @@
 """
-This is a boilerplate test file for pipeline 'data_processing'
+This is a boilerplate test file for pipeline 'data_preparation'
 generated using Kedro 0.19.12.
 Please add your pipeline tests here.
 
