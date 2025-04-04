@@ -3,23 +3,23 @@
 # Documentation for this file format can be found in "The Data Catalog"
 # Link: https://docs.kedro.org/en/stable/data/data_catalog.html
 
-kobe_shots_dev:
+raw_kobe_shots_dev:
   type: pandas.ParquetDataset
   filepath: data/01_raw/dataset_kobe_dev.parquet
   metadata:
     kedro-viz:
       layer: raw
 
-dataset_kobe_prod:
+raw_kobe_shots_prod:
   type: pandas.ParquetDataset
   filepath: data/01_raw/dataset_kobe_prod.parquet
   metadata:
     kedro-viz:
       layer: raw
 
-preprocessed_kobe_dev_dataset:
+model_input_table:
   type: pandas.ParquetDataset
-  filepath: data/02_intermediate/preprocessed_kobe_dev_dataset.parquet
+  filepath: data/03_primary/model_input_table.parquet
   metadata:
     kedro-viz:
-      layer: intermediate
+      layer: primary
