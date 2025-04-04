@@ -10,3 +10,7 @@ dataset_kobe_dev:
 dataset_kobe_prod:
   type: pandas.ParquetDataset
   filepath: data/01_raw/dataset_kobe_prod.parquet
+
+preprocessed_kobe_dev_dataset:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/preprocessed_kobe_dev_dataset.parquet
