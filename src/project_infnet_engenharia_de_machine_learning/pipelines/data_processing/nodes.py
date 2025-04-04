@@ -19,7 +19,7 @@ def _filter_columns(df: pd.DataFrame) -> pd.DataFrame:
 
 def preprocess_kobe_shots(kobe_shots: pd.DataFrame) -> pd.DataFrame:
     """
-    Preprocess the Kobe shots DataFrame by renaming columns and filtering.
+    Preprocess the Kobe shots DataFrame by renaming columns.
     """
     kobe_shots = _rename_columns(kobe_shots)
     return kobe_shots
