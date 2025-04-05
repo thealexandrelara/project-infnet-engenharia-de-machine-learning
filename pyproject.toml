@@ -16,6 +16,7 @@ dependencies = [
  "kedro-datasets>=4.1.0",
  "pyarrow>=19.0.1",
  "fastparquet>=2024.11.0",
+ "pycaret[mlops,models]>=3.0.0",
 ]
 
 [project.scripts]
@@ -53,3 +54,6 @@ namespaces = false
 
 [tool.kedro_telemetry]
 project_id = "ce3ce24935d7450fb1e1a89a4f82e4ed"
+
+[tool.uv]
+constraint-dependencies = ["kaleido==0.2.1", "catboost==1.2.7"]
