@@ -5,4 +5,4 @@ notebook
 kedro-datasets>=4.1.0
 pyarrow>=19.0.1
 fastparquet>=2024.11.0
-pycaret[mlops,models]>=3.0.0
+pycaret[mlops,models]==3.3.2
