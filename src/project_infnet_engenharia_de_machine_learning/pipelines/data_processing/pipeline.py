@@ -4,7 +4,7 @@ generated using Kedro 0.19.12
 """
 
 from kedro.pipeline import node, Pipeline, pipeline  # noqa
-from .nodes import preprocess_kobe_shots, create_model_input_table
+from .nodes import preprocess_kobe_shots, create_model_input_table, split_data
 
 
 def create_pipeline(**kwargs) -> Pipeline:
@@ -21,4 +21,10 @@ def create_pipeline(**kwargs) -> Pipeline:
             outputs="model_input_table",
             name="create_model_input_table_node",
         ),
+        node(
+            func=split_data,
+            inputs=["model_input_table", "params:model_options"],
+            outputs=["base_train", "base_test"],
+            name="split_data_node",
+        )
     ])
