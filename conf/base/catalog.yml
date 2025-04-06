@@ -30,3 +30,17 @@ model_input_table:
   metadata:
     kedro-viz:
       layer: primary
+
+base_train:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/base_train.parquet
+  metadata:
+    kedro-viz:
+      layer: primary
+
+base_test:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/base_test.parquet
+  metadata:
+    kedro-viz:
+      layer: primary
