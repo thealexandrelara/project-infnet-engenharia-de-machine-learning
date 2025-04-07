@@ -48,9 +48,9 @@ base_test:
 logistic_regression_model:
   type: kedro_mlflow.io.models.MlflowModelTrackingDataset
   flavor: mlflow.sklearn
+  artifact_path: logistic_regression_model
   save_args:
     registered_model_name: logistic-regression-model
-    artifact_path: logistic_regression_model
 
 logistic_regression_model_auc:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
@@ -61,9 +61,9 @@ logistic_regression_model_auc:
 decision_tree_model:
   type: kedro_mlflow.io.models.MlflowModelTrackingDataset
   flavor: mlflow.sklearn
+  artifact_path: decision_tree_model
   save_args:
     registered_model_name: decision-tree-model
-    artifact_path: decision_tree_model
 
 decision_tree_model_auc:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
