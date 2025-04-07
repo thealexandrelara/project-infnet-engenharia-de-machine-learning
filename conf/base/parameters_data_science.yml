@@ -9,3 +9,5 @@ model_options:
     - period
     - playoffs
     - shot_distance
+logistic_regression_model_auc_filename_path: data/08_reporting/logistic_regression_model_auc.png
+decision_tree_model_auc_filename_path: data/08_reporting/decision_tree_model_auc.png
