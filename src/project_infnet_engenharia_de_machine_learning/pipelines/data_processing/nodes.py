@@ -3,8 +3,12 @@ This is a boilerplate pipeline 'data_processing'
 generated using Kedro 0.19.12
 """
 import pandas as pd
+from kedro_mlflow.io.metrics import MlflowMetricDataset
 from pycaret.classification import ClassificationExperiment
 
+test_percent_metric = MlflowMetricDataset(key="test_percent")
+base_train_size = MlflowMetricDataset(key="base_train_size")
+base_test_size = MlflowMetricDataset(key="base_test_size")
 
 def _rename_columns(df):
     """
@@ -80,5 +84,9 @@ def split_data(
 
     train_data = pd.concat([X_train, y_train], axis=1)
     test_data = pd.concat([X_test, y_test], axis=1)
+
+    test_percent_metric.save(1.0 - parameters['train_size'])
+    base_train_size.save(len(train_data))
+    base_test_size.save(len(test_data))
 
     return train_data, test_data
