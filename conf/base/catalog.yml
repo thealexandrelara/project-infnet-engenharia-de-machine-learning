@@ -58,6 +58,18 @@ logistic_regression_model_auc:
     type: pillow.ImageDataset
     filepath: data/08_reporting/logistic_regression_model_auc.png
 
+logistic_regression_model_confusion_matrix:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: pillow.ImageDataset
+    filepath: data/08_reporting/logistic_regression_model_confusion_matrix.png
+
+logistic_regression_model_feature_importance:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: pillow.ImageDataset
+    filepath: data/08_reporting/logistic_regression_model_feature_importance.png
+
 decision_tree_model:
   type: kedro_mlflow.io.models.MlflowModelTrackingDataset
   flavor: mlflow.sklearn
@@ -70,3 +82,15 @@ decision_tree_model_auc:
   dataset:
     type: pillow.ImageDataset
     filepath: data/08_reporting/decision_tree_model_auc.png
+
+decision_tree_model_confusion_matrix:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: pillow.ImageDataset
+    filepath: data/08_reporting/decision_tree_model_confusion_matrix.png
+
+decision_tree_model_feature_importance:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: pillow.ImageDataset
+    filepath: data/08_reporting/decision_tree_model_feature_importance.png
