@@ -72,12 +72,18 @@ def train_logistic_regression_model(
         tuple[ClassificationExperiment, pd.DataFrame]: A tuple containing the trained experiment and the test data.
     """
     experiment = _createClassificationExperiment(train_data=train_data, test_data=test_data, parameters=parameters)
-    logistic_regression_model = experiment.create_model('lr')
+
+    # The cross-validation is set to false because I want to evaluate the model
+    # based on the complete test set, not on the cross-validation folds.
+    logistic_regression_model = experiment.create_model('lr', cross_validation=False)
     scoring_grid = experiment.pull()
     log_loss_score = scoring_grid['Log Loss'][0]
     f1_score = scoring_grid['F1'][0]
     logistic_regression_f1_score_metric.save(log_loss_score)
     logistic_regression_log_loss_metric.save(f1_score)
+
+    # Create the model again with cross-validation
+    logistic_regression_model = experiment.create_model('lr')
 
     return logistic_regression_model
 
@@ -95,12 +101,17 @@ def train_decision_tree_model(
         tuple[ClassificationExperiment, pd.DataFrame]: A tuple containing the trained experiment and the test data.
     """
     experiment = _createClassificationExperiment(train_data=train_data, test_data=test_data, parameters=parameters)
-    decision_tree_model = experiment.create_model('dt')
+    # The cross-validation is set to false because I want to evaluate the model
+    # based on the complete test set, not on the cross-validation folds.
+    decision_tree_model = experiment.create_model('dt', cross_validation=False)
     scoring_grid = experiment.pull()
     log_loss_score = scoring_grid['Log Loss'][0]
     f1_score = scoring_grid['F1'][0]
     decision_tree_log_loss_metric.save(log_loss_score)
     decision_tree_f1_score_metric.save(f1_score)
+
+    # Create the model again with cross-validation
+    decision_tree_model = experiment.create_model('dt')
 
     return decision_tree_model
 
