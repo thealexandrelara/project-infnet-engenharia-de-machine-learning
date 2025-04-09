@@ -24,6 +24,13 @@ preprocessed_kobe_shots:
     kedro-viz:
       layer: intermediate
 
+preprocessed_kobe_shots_prod:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/preprocessed_kobe_shots_prod.parquet
+  metadata:
+    kedro-viz:
+      layer: intermediate
+
 model_input_table:
   type: pandas.ParquetDataset
   filepath: data/03_primary/data_filtered.parquet
@@ -94,3 +101,7 @@ decision_tree_model_feature_importance:
   dataset:
     type: pillow.ImageDataset
     filepath: data/08_reporting/decision_tree_model_feature_importance.png
+
+best_model:
+  type: kedro_mlflow.io.models.MlflowModelRegistryDataset
+  model_name: logistic-regression-model

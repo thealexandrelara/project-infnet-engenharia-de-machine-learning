@@ -7,6 +7,7 @@ PIPELINE_NAME_MAP = {
     "data_ingestion": "ColetaDados",
     "data_processing": "PreparacaoDados",
     "data_science": "Treinamento",
+    "model_serving": "PipelineAplicacao"
 }
 
 def get_pipeline_run_name(pipeline_name: str) -> str:

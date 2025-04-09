@@ -16,6 +16,12 @@ def create_pipeline(**kwargs) -> Pipeline:
             name="create_preprocessed_kobe_shots_node",
         ),
         node(
+            func=preprocess_kobe_shots,
+            inputs="raw_kobe_shots_prod",
+            outputs="preprocessed_kobe_shots_prod",
+            name="create_preprocessed_kobe_shots_prod_node",
+        ),
+        node(
             func=create_model_input_table,
             inputs="preprocessed_kobe_shots",
             outputs="model_input_table",
