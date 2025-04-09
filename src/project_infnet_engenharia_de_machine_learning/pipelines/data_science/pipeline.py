@@ -12,7 +12,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         node(
             func=train_logistic_regression_model,
             inputs=["base_train", "base_test", "params:model_options"],
-            outputs='logistic_regression_model',
+            outputs=['logistic_regression_model', 'logistic_regression_model_with_proba'],
             name="train_logistic_regression_model_node",
         ),
         node(

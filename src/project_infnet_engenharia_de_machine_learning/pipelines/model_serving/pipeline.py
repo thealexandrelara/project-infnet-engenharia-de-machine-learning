@@ -11,8 +11,8 @@ def create_pipeline(**kwargs) -> Pipeline:
     return pipeline([
         node(
             func=predict_production_data,
-            inputs=["model", "production_data", "params:features"],
-            outputs="predictions",
+            inputs=["best_model", "logistic_regression_model_dev", "preprocessed_kobe_shots_prod", "params:features", "params:target"],
+            outputs="production_data_predictions",
             name="predict_production_data_node",
         )
     ])

@@ -75,7 +75,7 @@ def train_logistic_regression_model(
 
     # The cross-validation is set to false because I want to evaluate the model
     # based on the complete test set, not on the cross-validation folds.
-    logistic_regression_model = experiment.create_model('lr', cross_validation=False)
+    model = experiment.create_model('lr', cross_validation=False)
     scoring_grid = experiment.pull()
     log_loss_score = scoring_grid['Log Loss'][0]
     f1_score = scoring_grid['F1'][0]
@@ -83,9 +83,10 @@ def train_logistic_regression_model(
     logistic_regression_log_loss_metric.save(f1_score)
 
     # Create the model again with cross-validation
-    logistic_regression_model = experiment.create_model('lr')
+    model = experiment.create_model('lr')
+    tuned_model = experiment.tune_model(model, n_iter=100, optimize='AUC')
 
-    return logistic_regression_model
+    return tuned_model, tuned_model
 
 def train_decision_tree_model(
     train_data: pd.DataFrame,
@@ -111,9 +112,10 @@ def train_decision_tree_model(
     decision_tree_f1_score_metric.save(f1_score)
 
     # Create the model again with cross-validation
-    decision_tree_model = experiment.create_model('dt')
+    model = experiment.create_model('dt')
+    tuned_model = experiment.tune_model(model, n_iter=100, optimize='AUC')
 
-    return decision_tree_model
+    return tuned_model
 
 def save_auc_plot(
     train_data: pd.DataFrame,

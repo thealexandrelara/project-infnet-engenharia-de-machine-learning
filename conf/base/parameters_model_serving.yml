@@ -10,3 +10,4 @@ features:
   - period
   - playoffs
   - shot_distance
+target: shot_made_flag

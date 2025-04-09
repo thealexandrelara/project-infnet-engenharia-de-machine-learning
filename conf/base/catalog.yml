@@ -59,23 +59,44 @@ logistic_regression_model:
   save_args:
     registered_model_name: logistic-regression-model
 
+logistic_regression_model_with_proba:
+  type: kedro_mlflow.io.models.MlflowModelTrackingDataset
+  flavor: mlflow.sklearn
+  artifact_path: logistic_regression_model_with_proba
+  save_args:
+    registered_model_name: logistic-regression-model-dev
+    pyfunc_predict_fn: predict_proba
+
+logistic_regression_model_dev:
+  type: kedro_mlflow.io.models.MlflowModelRegistryDataset
+  model_name: logistic-regression-model-dev
+
 logistic_regression_model_auc:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:
     type: pillow.ImageDataset
     filepath: data/08_reporting/logistic_regression_model_auc.png
+    metadata:
+      kedro-viz:
+        layer: reporting
 
 logistic_regression_model_confusion_matrix:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:
     type: pillow.ImageDataset
     filepath: data/08_reporting/logistic_regression_model_confusion_matrix.png
+    metadata:
+      kedro-viz:
+        layer: reporting
 
 logistic_regression_model_feature_importance:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:
     type: pillow.ImageDataset
     filepath: data/08_reporting/logistic_regression_model_feature_importance.png
+    metadata:
+      kedro-viz:
+        layer: reporting
 
 decision_tree_model:
   type: kedro_mlflow.io.models.MlflowModelTrackingDataset
@@ -89,12 +110,18 @@ decision_tree_model_auc:
   dataset:
     type: pillow.ImageDataset
     filepath: data/08_reporting/decision_tree_model_auc.png
+    metadata:
+      kedro-viz:
+        layer: reporting
 
 decision_tree_model_confusion_matrix:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:
     type: pillow.ImageDataset
     filepath: data/08_reporting/decision_tree_model_confusion_matrix.png
+    metadata:
+      kedro-viz:
+        layer: reporting
 
 decision_tree_model_feature_importance:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
@@ -105,3 +132,10 @@ decision_tree_model_feature_importance:
 best_model:
   type: kedro_mlflow.io.models.MlflowModelRegistryDataset
   model_name: logistic-regression-model
+
+production_data_predictions:
+  type: pandas.ParquetDataset
+  filepath: data/08_reporting/production_data_predictions.parquet
+  metadata:
+    kedro-viz:
+      layer: reporting
