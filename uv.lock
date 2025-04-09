@@ -3933,6 +3933,7 @@ dependencies = [
     { name = "pyarrow" },
     { name = "pycaret", extra = ["mlops", "models"] },
     { name = "scikit-learn" },
+    { name = "streamlit" },
 ]
 
 [package.optional-dependencies]
@@ -3980,6 +3981,7 @@ requires-dist = [
     { name = "sphinx-autodoc-typehints", marker = "extra == 'docs'", specifier = "==1.20.2" },
     { name = "sphinx-copybutton", marker = "extra == 'docs'", specifier = "==0.5.2" },
     { name = "sphinx-rtd-theme", marker = "extra == 'docs'", specifier = "==2.0.0" },
+    { name = "streamlit", specifier = ">=1.44.1" },
 ]
 provides-extras = ["docs", "dev"]
 
@@ -4311,6 +4313,19 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/65/ca/268cae039ea91366ba88b9a848977b7189cb7675cb2cd9ee273464a20d91/pydantic_core-2.33.0-pp39-pypy39_pp73-musllinux_1_1_armv7l.whl", hash = "sha256:b716294e721d8060908dbebe32639b01bfe61b15f9f57bcc18ca9a0e00d9520b", size = 2251007 },
     { url = "https://files.pythonhosted.org/packages/3c/a4/5ca3a14b5d992e63a766b8883d4ba8b4d353ef6a2d9f59ee5d60e728998a/pydantic_core-2.33.0-pp39-pypy39_pp73-musllinux_1_1_x86_64.whl", hash = "sha256:fc53e05c16697ff0c1c7c2b98e45e131d4bfb78068fffff92a82d169cbb4c7b7", size = 2256435 },
     { url = "https://files.pythonhosted.org/packages/da/a2/2670964d7046025b96f8c6d35c38e5310ec6aa1681e4158ef31ab21a4727/pydantic_core-2.33.0-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:68504959253303d3ae9406b634997a2123a0b0c1da86459abbd0ffc921695eac", size = 2082790 },
+]
+
+[[package]]
+name = "pydeck"
+version = "0.9.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "jinja2" },
+    { name = "numpy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a1/ca/40e14e196864a0f61a92abb14d09b3d3da98f94ccb03b49cf51688140dab/pydeck-0.9.1.tar.gz", hash = "sha256:f74475ae637951d63f2ee58326757f8d4f9cd9f2a457cf42950715003e2cb605", size = 3832240 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ab/4c/b888e6cf58bd9db9c93f40d1c6be8283ff49d88919231afe93a6bcf61626/pydeck-0.9.1-py2.py3-none-any.whl", hash = "sha256:b3f75ba0d273fc917094fa61224f3f6076ca8752b93d46faf3bcfd9f9d59b038", size = 6900403 },
 ]
 
 [[package]]
@@ -5641,6 +5656,35 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/b4/32/eab6ccbdae8e1ab4e91c2b3efd1823dffcd4b668f747110c994167e577c1/strawberry_graphql-0.262.6.tar.gz", hash = "sha256:ed9c91511142581c2a1e6a398cabf9c1cc6727c67e8a80aaedeacba2a2f27955", size = 202456 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/11/23/8bcdfa8b2b4f639f20606c9c43b26001ac3e5c3408d3ba1cd8bb3d0d5dc5/strawberry_graphql-0.262.6-py3-none-any.whl", hash = "sha256:f0095cc86f41f24d0b4fbe5f3556f56c304ac5585867ea2af12210ed9a4d3ffd", size = 296025 },
+]
+
+[[package]]
+name = "streamlit"
+version = "1.44.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "altair" },
+    { name = "blinker" },
+    { name = "cachetools" },
+    { name = "click" },
+    { name = "gitpython" },
+    { name = "numpy" },
+    { name = "packaging" },
+    { name = "pandas" },
+    { name = "pillow" },
+    { name = "protobuf" },
+    { name = "pyarrow" },
+    { name = "pydeck" },
+    { name = "requests" },
+    { name = "tenacity" },
+    { name = "toml" },
+    { name = "tornado" },
+    { name = "typing-extensions" },
+    { name = "watchdog", marker = "sys_platform != 'darwin'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/3e/c0/7286284567e5045f0c587c426d0c41aee5d10c0a2e360e627a83037e9f0c/streamlit-1.44.1.tar.gz", hash = "sha256:c6914ed6d5b76870b461510476806db370f36425ae0e6654d227c988288198d3", size = 9423685 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/eb/17/fc425e1d4d86e31b2aaf0812a2ef2163763a0670d671720c7c36e8679323/streamlit-1.44.1-py3-none-any.whl", hash = "sha256:9fe355f58b11f4eb71e74f115ce1f38c4c9eaff2733e6bcffb510ac1298a5990", size = 9812242 },
 ]
 
 [[package]]
