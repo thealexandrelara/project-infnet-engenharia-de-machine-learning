@@ -117,6 +117,41 @@ def train_decision_tree_model(
 
     return tuned_model
 
+def save_plots(
+    train_data: pd.DataFrame,
+    test_data: pd.DataFrame,
+    parameters: dict,
+    model,
+    output_paths: str,
+):
+    """
+    Save the plots for the given model.
+    Args:
+        model: The trained model.
+    """
+    experiment = _createClassificationExperiment(train_data=train_data, test_data=test_data, parameters=parameters)
+    auc_image = _save_plot_image_to_reporting_folder(
+        plot_name='auc',
+        experiment=experiment,
+        model=model,
+        output_path=output_paths['auc'],
+    )
+    confusion_matrix_image = _save_plot_image_to_reporting_folder(
+        plot_name='confusion_matrix',
+        experiment=experiment,
+        model=model,
+        output_path=output_paths['confusion_matrix'],
+    )
+    feature_importance_image = _save_plot_image_to_reporting_folder(
+        plot_name='feature',
+        experiment=experiment,
+        model=model,
+        output_path=output_paths['feature'],
+    )
+
+    return auc_image, confusion_matrix_image, feature_importance_image
+
+
 def save_auc_plot(
     train_data: pd.DataFrame,
     test_data: pd.DataFrame,

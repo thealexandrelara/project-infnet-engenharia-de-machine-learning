@@ -4,29 +4,105 @@ Projeto de machine learning com o objetivo de prever se Kobe Bryant acertou ou e
 flowchart
     subgraph data_ingestion[pipeline: data_ingestion]
         direction TB
-        get_data[Coleta de dados: request na api do Github] -->
-        save_data[Armazenamento dos dados]
-        save_data --> raw_kobe_shots_dev_dataset[file: data/01_raw/dataset_kobe_dev.parquet]
-        save_data --> raw_kobe_shots_prod_dataset[file: data/01_raw/dataset_kobe_prod.parquet]
+        subgraph data_ingestion_nodes[nodes]
+            direction LR
+            download_kobe_shots_dev_dataset[node: download_kobe_shots_dev_dataset]
+            download_kobe_shots_prod_dataset[node: download_kobe_shots_prod_dataset]
+        end
+        subgraph data_ingestion_outputs[outputs]
+            direction LR
+            raw_kobe_shots_dev_dataset{{output 'raw_kobe_shots_dev': data/01_raw/dataset_kobe_dev.parquet}}
+            raw_kobe_shots_prod_dataset{{output 'raw_kobe_shots_prod': data/01_raw/dataset_kobe_prod.parquet}}
+        end
+        download_kobe_shots_dev_dataset --> raw_kobe_shots_dev_dataset
+        download_kobe_shots_prod_dataset --> raw_kobe_shots_prod_dataset
     end
     subgraph data_processing[pipeline: data_processing]
         direction TB
-        preprocess_kobe_shots[Pré-processamento de dados] --> split_data
-        split_data[Separação treino e teste] --> save_preprocessed_data[Salvar dados]
-        save_preprocessed_data --> intermediate_preprocessed_kobe_shots[file: data/02_intermediate/preprocessed_kobe_shots.parquet]
-        save_preprocessed_data --> primary_data_filtered[file: data/03_primary/data_filtered.parquet]
-        save_preprocessed_data --> primary_base_train[file: data/03_primary/base_train.parquet]
-        save_preprocessed_data --> primary_base_test[file: data/03_primary/base_test.parquet]
+        subgraph data_processing_nodes[nodes]
+            direction LR
+            preprocess_kobe_shots_dev_node[node: preprocess_kobe_shots]
+            preprocess_kobe_shots_prod_node[node: preprocess_kobe_shots_prod]
+            create_model_input_table_node[node: create_model_input_table_node]
+            split_data_node[node: split_data_node]
+        end
+        subgraph data_processing_outputs[outputs]
+            direction LR
+            preprocessed_kobe_shots[output 'preprocessed_kobe_shots': data/02_intermediate/preprocessed_kobe_shots.parquet]
+            preprocessed_kobe_shots_prod[output 'preprocessed_kobe_shots_prod': data/02_intermediate/preprocessed_kobe_shots.parquet]
+            model_input_table[output 'model_input_table': data/03_primary/data_filtered.parquet]
+            base_train[output 'base_train': data/03_primary/data_filtered.parquet]
+            base_test[output 'base_test': data/03_primary/data_filtered.parquet]
+        end
+        preprocess_kobe_shots_dev_node --> preprocessed_kobe_shots
+        preprocess_kobe_shots_prod_node --> preprocessed_kobe_shots_prod
+        create_model_input_table_node --> model_input_table
+        split_data_node --> base_train
+        split_data_node --> base_test
     end
     subgraph data_science[pipeline: data_science]
         direction TB
-        train_logistic_regression_model[Treinar modelo de regressão logística] --> save_metrics[Salvar métricas do modelo]
-        train_decision_tree_model[Treinar modelo de árvore de decisão] --> save_metrics[Salvar métricas do modelo]
-        save_metrics[Salvar métricas do modelo] --> save_model[Salvar modelo]
-        save_model --> file_logistic_regression_model[mlflow artifact: logistic_regression_model]
-        save_model --> file_decision_tree_model[mlflow artifact: decision_tree_model]
+        subgraph data_science_nodes[nodes]
+            direction LR
+            train_logistic_regression_model_node[node: train_logistic_regression_model_node]
+            train_decision_tree_model_node[node: train_decision_tree_model_node]
+            save_logistic_regression_model_plots_node[node: save_logistic_regression_model_plots_node]
+            save_decision_tree_model_plots_node[node: save_decision_tree_model_plots_node]
+        end
+        subgraph data_science_outputs[outputs]
+            direction LR
+            logistic_regression_model[output 'logistic_regression_model': logistic-regression-model]
+            logistic_regression_model_with_proba[output 'logistic_regression_model_with_proba': logistic-regression-model-dev]
+            decision_tree_model[output 'decision_tree_model': decision-tree-model]
+            logistic_regression_model_auc[output 'logistic_regression_model_auc': data/08_reporting/logistic_regression_model_auc.png]
+            logistic_regression_model_confusion_matrix[output 'logistic_regression_model_confusion_matrix': data/08_reporting/logistic_regression_model_confusion_matrix.png]
+            logistic_regression_model_feature_importance[output 'logistic_regression_model_feature_importance': data/08_reporting/logistic_regression_model_feature_importance.png]
+            decision_tree_auc[output 'decision_tree_auc': data/08_reporting/decision_tree_model_auc.png]
+            decision_tree_model_confusion_matrix[output 'decision_tree_model_confusion_matrix': data/08_reporting/decision_tree_model_confusion_matrix.png]
+            decision_tree_model_feature_importance[output 'decision_tree_model_feature_importance': data/08_reporting/decision_tree_model_feature_importance.png]
+        end
+        train_logistic_regression_model_node --> logistic_regression_model
+        train_logistic_regression_model_node --> logistic_regression_model_with_proba
+        train_decision_tree_model_node --> decision_tree_model
+        save_logistic_regression_model_plots_node --> logistic_regression_model_auc
+        save_logistic_regression_model_plots_node --> logistic_regression_model_confusion_matrix
+        save_logistic_regression_model_plots_node --> logistic_regression_model_feature_importance
+        save_decision_tree_model_plots_node --> decision_tree_auc
+        save_decision_tree_model_plots_node --> decision_tree_model_confusion_matrix
+        save_decision_tree_model_plots_node --> decision_tree_model_feature_importance
     end
-    raw_kobe_shots_dev_dataset --> data_processing
+    subgraph data_science[pipeline: data_science]
+        direction TB
+        subgraph data_science_nodes[nodes]
+            direction LR
+            train_logistic_regression_model_node[node: train_logistic_regression_model_node]
+            train_decision_tree_model_node[node: train_decision_tree_model_node]
+            save_logistic_regression_model_plots_node[node: save_logistic_regression_model_plots_node]
+            save_decision_tree_model_plots_node[node: save_decision_tree_model_plots_node]
+        end
+        subgraph data_science_outputs[outputs]
+            direction LR
+            logistic_regression_model[output 'logistic_regression_model': logistic-regression-model]
+            logistic_regression_model_with_proba[output 'logistic_regression_model_with_proba': logistic-regression-model-dev]
+            decision_tree_model[output 'decision_tree_model': decision-tree-model]
+            logistic_regression_model_auc[output 'logistic_regression_model_auc': data/08_reporting/logistic_regression_model_auc.png]
+            logistic_regression_model_confusion_matrix[output 'logistic_regression_model_confusion_matrix': data/08_reporting/logistic_regression_model_confusion_matrix.png]
+            logistic_regression_model_feature_importance[output 'logistic_regression_model_feature_importance': data/08_reporting/logistic_regression_model_feature_importance.png]
+            decision_tree_auc[output 'decision_tree_auc': data/08_reporting/decision_tree_model_auc.png]
+            decision_tree_model_confusion_matrix[output 'decision_tree_model_confusion_matrix': data/08_reporting/decision_tree_model_confusion_matrix.png]
+            decision_tree_model_feature_importance[output 'decision_tree_model_feature_importance': data/08_reporting/decision_tree_model_feature_importance.png]
+        end
+        train_logistic_regression_model_node --> logistic_regression_model
+        train_logistic_regression_model_node --> logistic_regression_model_with_proba
+        train_decision_tree_model_node --> decision_tree_model
+        save_logistic_regression_model_plots_node --> logistic_regression_model_auc
+        save_logistic_regression_model_plots_node --> logistic_regression_model_confusion_matrix
+        save_logistic_regression_model_plots_node --> logistic_regression_model_feature_importance
+        save_decision_tree_model_plots_node --> decision_tree_auc
+        save_decision_tree_model_plots_node --> decision_tree_model_confusion_matrix
+        save_decision_tree_model_plots_node --> decision_tree_model_feature_importance
+    end
+    data_ingestion --> data_processing
     data_processing --> data_science
 ```
 

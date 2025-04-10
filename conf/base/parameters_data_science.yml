@@ -9,9 +9,12 @@ model_options:
     - period
     - playoffs
     - shot_distance
-logistic_regression_model_auc_filename_path: data/08_reporting/logistic_regression_model_auc.png
-logistic_regression_model_confusion_matrix_filename_path: data/08_reporting/logistic_regression_model_confusion_matrix.png
-logistic_regression_model_feature_importance_filename_path: data/08_reporting/logistic_regression_model_feature_importance.png
-decision_tree_model_auc_filename_path: data/08_reporting/decision_tree_model_auc.png
-decision_tree_model_confusion_matrix_filename_path: data/08_reporting/decision_tree_model_confusion_matrix.png
-decision_tree_model_feature_importance_filename_path: data/08_reporting/decision_tree_model_feature_importance.png
+logistic_regression_model_plot_images_path:
+  auc: data/08_reporting/logistic_regression_model_auc.png
+  confusion_matrix: data/08_reporting/logistic_regression_model_confusion_matrix.png
+  feature: data/08_reporting/logistic_regression_model_feature_importance.png
+
+decision_tree_model_plot_images_path:
+  auc: data/08_reporting/decision_tree_model_auc.png
+  confusion_matrix: data/08_reporting/decision_tree_model_confusion_matrix.png
+  feature: data/08_reporting/decision_tree_model_feature_importance.png
