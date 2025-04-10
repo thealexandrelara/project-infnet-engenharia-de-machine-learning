@@ -124,7 +124,7 @@ Provisionamento (Deployment)
 
 Dados recebidos diretamente da fonte (Github API), sem qualquer tipo de tratamento ou pré-processamento. A pipeline utilizada foi `data_ingestion`.
 
-✅ raw_kobe_shots_dev
+raw_kobe_shots_dev
 
     Descrição: Dataset de desenvolvimento contendo os dados históricos de arremessos do Kobe Bryant utilizados para treinamento e validação do modelo.
     - Formato: .parquet
@@ -149,7 +149,7 @@ Dados recebidos diretamente da fonte (Github API), sem qualquer tipo de tratamen
         - opponent: time adversário.
         - shot_id: identificador único do arremesso.
 
-✅ raw_kobe_shots_prod
+raw_kobe_shots_prod
 
     Descrição: Dataset de produção contendo novos dados para aplicação do modelo treinado. Utilizado na etapa de predição e monitoramento.
     - Formato: .parquet
@@ -178,20 +178,21 @@ preprocessed_kobe_shots_prod
 
 Dados já organizados com as features selecionadas, normalizadas e estruturadas para alimentar algoritmos de Machine Learning.
 
-✅ model_input_table
+model_input_table
 
     - Descrição: Tabela final com todas as features tratadas, utilizada para separação em treino/teste. Representa o input consolidado para os modelos.
     - Formato: .parquet
     - Localização: data/03_primary/data_filtered.parquet
+    - Dimensão: 20285 registros (linhas) e 7 colunas
 
-✅ base_train
+base_train
 
     - Descrição: Subconjunto da model_input_table contendo os dados utilizados para o treinamento do modelo.
     - Finalidade: Treinar modelos de machine learning com PyCaret.
     - Formato: .parquet
     - Localização: data/03_primary/base_train.parquet
 
-✅ base_test
+base_test
 
     - Descrição: Subconjunto da model_input_table contendo os dados utilizados para a avaliação do modelo.
     - Finalidade: Calcular métricas como log_loss e f1_score durante o experimento.
@@ -269,3 +270,19 @@ production_data_predictions
         - Localização: data/08_reporting/production_data_predictions.parquet
 
 ---
+
+## Importância da separação treino e teste
+
+Os dados foram divididos em dois conjuntos, sendo 80% para treino e 20% para teste. Foi utilizado uma divisão estratificada e aleatória garantindo que a proporção das classes (shot_made_flag) seja mantida em ambos os conjuntos.
+
+Esta etapa é essencial para avaliar o desempenho real do modelo. O conjunto de treino é usado para ajustar os parâmetros do modelo, enquanto o conjunto de teste permite avaliar sua generalização em dados nunca vistos.
+
+Estratégias para reduzir viés de dados:
+
+- Estratificação: Garante representatividade balanceada das classes nos conjuntos.
+- Cross-validation: O treino do modelo ocorreu usando cross-validation para testar o modelo em múltiplas partições, reduzindo o risco de overfitting ou viés de amostragem.
+- Shuffling aleatório: Foi utilizado um shuffling para introduzir aleatoriedade e evitar que a ordem original influenciasse no modelo.
+
+## Escolha do modelo
+
+O modelo selecionado foi a Regressão Logística. Foi possível observar um melhor desempenho na métrica de log_loss, além de uma melhor curva ROC e mais verdadeiros positivos na matriz de confusão. Também vale destacar a maior simplicidade e interpretabilidade do modelo de regressão logística.
