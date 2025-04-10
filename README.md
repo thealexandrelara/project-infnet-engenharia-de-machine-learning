@@ -286,3 +286,13 @@ Estratégias para reduzir viés de dados:
 ## Escolha do modelo
 
 O modelo selecionado foi a Regressão Logística. Foi possível observar um melhor desempenho na métrica de log_loss, além de uma melhor curva ROC e mais verdadeiros positivos na matriz de confusão. Também vale destacar a maior simplicidade e interpretabilidade do modelo de regressão logística.
+
+## Aderência do modelo à base de produção
+
+Ao realizar a inferência na base de produção, o desempenho caiu consideravelmente, o que indica que ele não é aderente à base de produção. A base de produção contém somente tentativas de arremessos de 3 pontos, enquanto a base de desenvolvimento tem tentativa de arremessos de 2 pontos. Analisando a feature importance, temos a seguinte ordem de maior para menor importância no modelo: lat, lng e shot_distance.
+
+Considerando isso, dá pra notar que são variáveis relacionadas com o posicionamento na quadra e distância do arremesso, ou seja, como a base tem um contexto diferente (o posicionamento na quadra para cestas de 2 e 3 pontos são diferentes), ela não consegue generalizar para a base de produção (que não foi utilizada durante o treinamento).
+
+## Monitoramento de saúde do modelo com e sem a disponibilidade da variável resposta
+
+No caso de termos a variável resposta, podemos fazer o monitoramento das próprias métricas log_loss, F1 Score, Precision, Recall, etc., e dessa forma detectar rapidamente a degradação do modelo. Se a variável resposta não está disponível, podemos adotar diferentes estratégias de monitoramento como da relação das features (data drift), técnicas de detecção de conceito (concept drift), analisar mudança semântica em alguma coluna (feature drift), etc.
