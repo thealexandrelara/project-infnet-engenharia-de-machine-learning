@@ -117,3 +117,155 @@ Provisionamento (Deployment)
 - O modelo é versionado e registrado no MLflow Model Registry.
 - Pode ser servido via API local com mlflow models serve ou embarcado diretamente na aplicação Streamlit, garantindo inferência direta.
 - A interface desenvolvida em Streamlit permite interação com o modelo, visualização dos dados e resultados das previsões.
+
+## Artefatos
+
+### Camada raw – Dados brutos
+
+Dados recebidos diretamente da fonte (Github API), sem qualquer tipo de tratamento ou pré-processamento. A pipeline utilizada foi `data_ingestion`.
+
+✅ raw_kobe_shots_dev
+
+    Descrição: Dataset de desenvolvimento contendo os dados históricos de arremessos do Kobe Bryant utilizados para treinamento e validação do modelo.
+    - Formato: .parquet
+    - Localização: data/01_raw/dataset_kobe_dev.parquet
+    - Colunas:
+        - action_type: tipo específico do arremesso (ex: Jump Shot, Layup).
+        - combined_shot_type: tipo genérico do arremesso (ex: 2PT Field Goal).
+        - game_event_id: identificador do evento do jogo.
+        - game_id: identificador único do jogo.
+        - lat, lon: coordenadas geográficas da tentativa.
+        - loc_x, loc_y: coordenadas cartesianas da tentativa.
+        - minutes_remaining, seconds_remaining: tempo restante no período.
+        - period: número do período (1 a 4, ou prorrogações).
+        - playoffs: flag indicando se é jogo de playoff.
+        - season: temporada (ex: 2010-11).
+        - shot_distance: distância do arremesso ao cesto.
+        - shot_made_flag: variável-alvo (1 para acerto, 0 para erro).
+        - shot_type, shot_zone_area, shot_zone_basic, shot_zone_range: informações sobre a localização e tipo do arremesso.
+        - team_id, team_name: identificadores do time.
+        - game_date: data do jogo.
+        - matchup: descrição do confronto (ex: LAL vs BOS).
+        - opponent: time adversário.
+        - shot_id: identificador único do arremesso.
+
+✅ raw_kobe_shots_prod
+
+    Descrição: Dataset de produção contendo novos dados para aplicação do modelo treinado. Utilizado na etapa de predição e monitoramento.
+    - Formato: .parquet
+    - Localização: data/01_raw/dataset_kobe_prod.parquet
+    - Composição: Mesmo schema do raw_kobe_shots_dev, porém com registros distintos que representam novos dados ainda não utilizados no treinamento.
+
+#### Camada intermediate – Dados pré-processados
+
+Conjunto de dados que passaram por etapas de limpeza, transformação e codificação, mas ainda não estão preparados para o treino final do modelo.
+
+preprocessed_kobe_shots
+
+    Descrição: Dados de desenvolvimento após o pré-processamento inicial (ex: remoção de colunas irrelevantes, tratamento de valores nulos, conversão de tipos, encoding de variáveis categóricas).
+    - Finalidade: Servirá como base para geração da tabela de entrada do modelo.
+    - Formato: .parquet
+    - Localização: data/02_intermediate/preprocessed_kobe_shots.parquet
+
+preprocessed_kobe_shots_prod
+
+    - Descrição: Versão de produção dos dados pré-processados, com as mesmas transformações aplicadas ao dataset de desenvolvimento.
+    - Finalidade: Alimentar o modelo final em ambiente de aplicação.
+    - Formato: .parquet
+    - Localização: data/02_intermediate/preprocessed_kobe_shots_prod.parquet
+
+#### Camada primary – Dados prontos para treino/teste
+
+Dados já organizados com as features selecionadas, normalizadas e estruturadas para alimentar algoritmos de Machine Learning.
+
+✅ model_input_table
+
+    - Descrição: Tabela final com todas as features tratadas, utilizada para separação em treino/teste. Representa o input consolidado para os modelos.
+    - Formato: .parquet
+    - Localização: data/03_primary/data_filtered.parquet
+
+✅ base_train
+
+    - Descrição: Subconjunto da model_input_table contendo os dados utilizados para o treinamento do modelo.
+    - Finalidade: Treinar modelos de machine learning com PyCaret.
+    - Formato: .parquet
+    - Localização: data/03_primary/base_train.parquet
+
+✅ base_test
+
+    - Descrição: Subconjunto da model_input_table contendo os dados utilizados para a avaliação do modelo.
+    - Finalidade: Calcular métricas como log_loss e f1_score durante o experimento.
+    - Formato: .parquet
+    - Localização: data/03_primary/base_test.parquet
+
+🤖 Camada data_science – Modelos e experimentos
+
+Modelos treinados e salvos com MLflow, prontos para uso em produção ou experimentação. Inclui versões com e sem probabilidade, além dos registros no MLflow Model Registry.
+
+logistic_regression_model
+
+    - Descrição: Modelo de regressão logística treinado com scikit-learn, salvo via MLflow para rastreamento.
+    - Uso: Versão padrão para predições com .predict().
+    - Registro no MLflow: logistic-regression-model
+
+logistic_regression_model_with_proba
+
+    - Descrição: Mesmo modelo da regressão logística, mas configurado para retornar probabilidades com .predict_proba().
+    - Registro no MLflow: logistic-regression-model-dev
+
+logistic_regression_model_dev
+
+    - Descrição: Acesso à última versão do modelo de regressão logística registrada no MLflow Model Registry como logistic-regression-model-dev.
+
+decision_tree_model
+
+    - Descrição: Modelo de árvore de decisão treinado e salvo via MLflow.
+    - Registro no MLflow: decision-tree-model
+
+Camada reporting – Relatórios e visualizações
+
+Artefatos visuais gerados para análise dos modelos, como AUC, matriz de confusão e importância das variáveis.
+
+logistic_regression_model_auc
+
+    - Descrição: Gráfico de curva ROC AUC do modelo de regressão logística.
+    - Localização: data/08_reporting/logistic_regression_model_auc.png
+
+logistic_regression_model_confusion_matrix
+
+    - Descrição: Matriz de confusão com desempenho do modelo.
+    - Localização: data/08_reporting/logistic_regression_model_confusion_matrix.png
+
+logistic_regression_model_feature_importance
+
+    - Descrição: Gráfico de importância das features no modelo.
+    - Localização: data/08_reporting/logistic_regression_model_feature_importance.png
+
+decision_tree_model_auc
+
+    - Descrição: Gráfico de curva ROC AUC da árvore de decisão.
+    - Localização: data/08_reporting/decision_tree_model_auc.png
+
+decision_tree_model_confusion_matrix
+
+    - Descrição: Matriz de confusão da árvore de decisão.
+    - Localização: data/08_reporting/decision_tree_model_confusion_matrix.png
+
+decision_tree_model_feature_importance
+
+    - Descrição: Gráfico de importância das features da árvore.
+    - Localização: data/08_reporting/decision_tree_model_feature_importance.png
+
+production_data_predictions
+
+    - Descrição: Dataset contendo os resultados das previsões feitas com os dados de produção. Inclui os valores reais (y_true), as predições (y_pred), e as métricas de avaliação (log_loss e f1_score) aplicadas ao modelo carregado via MLflow.
+    - Composição:
+        - y_true: Classe real do alvo nos dados de produção.
+        - y_pred: Classe prevista pelo modelo.
+        - model_log_loss: Valor da função de custo log_loss calculado com predict_proba.
+        - model_f1_score: F1 Score das predições classificadas com .predict().
+        - Finalidade: Auxilia na avaliação da aderência do modelo ao novo conjunto de dados e no monitoramento da performance.
+        - Formato: .parquet
+        - Localização: data/08_reporting/production_data_predictions.parquet
+
+---
