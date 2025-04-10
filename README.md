@@ -1,5 +1,9 @@
 Projeto de machine learning com o objetivo de prever se Kobe Bryant acertou ou errou uma tentativa de arremesso, utilizando abordagens de classificação e regressão. O projeto é baseado no dataset [Kobe Bryant Shot Selectio](https://www.kaggle.com/c/kobe-bryant-shot-selection/overview), disponível no Kaggle.
 
+# Diagrama
+
+Abaixo encontra-se o diagrama contendo todas as etapas necessárias para este projeto que vai desde a pipeline de aquisição até a operação do modelo:
+
 ```mermaid
 flowchart
     subgraph data_ingestion[pipeline: data_ingestion]
@@ -28,11 +32,11 @@ flowchart
         end
         subgraph data_processing_outputs[outputs]
             direction LR
-            preprocessed_kobe_shots[output 'preprocessed_kobe_shots': data/02_intermediate/preprocessed_kobe_shots.parquet]
-            preprocessed_kobe_shots_prod[output 'preprocessed_kobe_shots_prod': data/02_intermediate/preprocessed_kobe_shots.parquet]
-            model_input_table[output 'model_input_table': data/03_primary/data_filtered.parquet]
-            base_train[output 'base_train': data/03_primary/data_filtered.parquet]
-            base_test[output 'base_test': data/03_primary/data_filtered.parquet]
+            preprocessed_kobe_shots{{output 'preprocessed_kobe_shots': data/02_intermediate/preprocessed_kobe_shots.parquet}}
+            preprocessed_kobe_shots_prod{{output 'preprocessed_kobe_shots_prod': data/02_intermediate/preprocessed_kobe_shots.parquet}}
+            model_input_table{{output 'model_input_table': data/03_primary/data_filtered.parquet}}
+            base_train{{output 'base_train': data/03_primary/data_filtered.parquet}}
+            base_test{{output 'base_test': data/03_primary/data_filtered.parquet}}
         end
         preprocess_kobe_shots_dev_node --> preprocessed_kobe_shots
         preprocess_kobe_shots_prod_node --> preprocessed_kobe_shots_prod
@@ -54,83 +58,61 @@ flowchart
             logistic_regression_model[output 'logistic_regression_model': logistic-regression-model]
             logistic_regression_model_with_proba[output 'logistic_regression_model_with_proba': logistic-regression-model-dev]
             decision_tree_model[output 'decision_tree_model': decision-tree-model]
-            logistic_regression_model_auc[output 'logistic_regression_model_auc': data/08_reporting/logistic_regression_model_auc.png]
-            logistic_regression_model_confusion_matrix[output 'logistic_regression_model_confusion_matrix': data/08_reporting/logistic_regression_model_confusion_matrix.png]
-            logistic_regression_model_feature_importance[output 'logistic_regression_model_feature_importance': data/08_reporting/logistic_regression_model_feature_importance.png]
-            decision_tree_auc[output 'decision_tree_auc': data/08_reporting/decision_tree_model_auc.png]
-            decision_tree_model_confusion_matrix[output 'decision_tree_model_confusion_matrix': data/08_reporting/decision_tree_model_confusion_matrix.png]
-            decision_tree_model_feature_importance[output 'decision_tree_model_feature_importance': data/08_reporting/decision_tree_model_feature_importance.png]
+
+            logistic_regression_model_plots{{output 'logistic_regression_model_auc': data/08_reporting/logistic_regression_model_auc.png<br/><br/>output 'logistic_regression_model_confusion_matrix': data/08_reporting/logistic_regression_model_confusion_matrix.png<br/><br/>output 'logistic_regression_model_feature_importance': data/08_reporting/logistic_regression_model_feature_importance.png}}
+
+            decision_tree_plots{{output 'decision_tree_auc': data/08_reporting/decision_tree_model_auc.png<br/><br/>output 'decision_tree_model_confusion_matrix': data/08_reporting/decision_tree_model_confusion_matrix.png<br/><br/>output 'decision_tree_model_feature_importance': data/08_reporting/decision_tree_model_feature_importance.png}}
         end
         train_logistic_regression_model_node --> logistic_regression_model
         train_logistic_regression_model_node --> logistic_regression_model_with_proba
         train_decision_tree_model_node --> decision_tree_model
-        save_logistic_regression_model_plots_node --> logistic_regression_model_auc
-        save_logistic_regression_model_plots_node --> logistic_regression_model_confusion_matrix
-        save_logistic_regression_model_plots_node --> logistic_regression_model_feature_importance
-        save_decision_tree_model_plots_node --> decision_tree_auc
-        save_decision_tree_model_plots_node --> decision_tree_model_confusion_matrix
-        save_decision_tree_model_plots_node --> decision_tree_model_feature_importance
+        save_logistic_regression_model_plots_node --> logistic_regression_model_plots
+        save_decision_tree_model_plots_node --> decision_tree_plots
     end
-    subgraph data_science[pipeline: data_science]
+    subgraph serving_model[pipeline: serving_model]
         direction TB
-        subgraph data_science_nodes[nodes]
+        subgraph serving_model_nodes[nodes]
             direction LR
-            train_logistic_regression_model_node[node: train_logistic_regression_model_node]
-            train_decision_tree_model_node[node: train_decision_tree_model_node]
-            save_logistic_regression_model_plots_node[node: save_logistic_regression_model_plots_node]
-            save_decision_tree_model_plots_node[node: save_decision_tree_model_plots_node]
+            predict_production_data_node[node: predict_production_data_node]
         end
-        subgraph data_science_outputs[outputs]
+        subgraph serving_model_outputs[outputs]
             direction LR
-            logistic_regression_model[output 'logistic_regression_model': logistic-regression-model]
-            logistic_regression_model_with_proba[output 'logistic_regression_model_with_proba': logistic-regression-model-dev]
-            decision_tree_model[output 'decision_tree_model': decision-tree-model]
-            logistic_regression_model_auc[output 'logistic_regression_model_auc': data/08_reporting/logistic_regression_model_auc.png]
-            logistic_regression_model_confusion_matrix[output 'logistic_regression_model_confusion_matrix': data/08_reporting/logistic_regression_model_confusion_matrix.png]
-            logistic_regression_model_feature_importance[output 'logistic_regression_model_feature_importance': data/08_reporting/logistic_regression_model_feature_importance.png]
-            decision_tree_auc[output 'decision_tree_auc': data/08_reporting/decision_tree_model_auc.png]
-            decision_tree_model_confusion_matrix[output 'decision_tree_model_confusion_matrix': data/08_reporting/decision_tree_model_confusion_matrix.png]
-            decision_tree_model_feature_importance[output 'decision_tree_model_feature_importance': data/08_reporting/decision_tree_model_feature_importance.png]
+            production_data_predictions{{output 'production_data_predictions': data/08_reporting/production_data_predictions.parquet}}
         end
-        train_logistic_regression_model_node --> logistic_regression_model
-        train_logistic_regression_model_node --> logistic_regression_model_with_proba
-        train_decision_tree_model_node --> decision_tree_model
-        save_logistic_regression_model_plots_node --> logistic_regression_model_auc
-        save_logistic_regression_model_plots_node --> logistic_regression_model_confusion_matrix
-        save_logistic_regression_model_plots_node --> logistic_regression_model_feature_importance
-        save_decision_tree_model_plots_node --> decision_tree_auc
-        save_decision_tree_model_plots_node --> decision_tree_model_confusion_matrix
-        save_decision_tree_model_plots_node --> decision_tree_model_feature_importance
+        predict_production_data_node --> production_data_predictions
     end
     data_ingestion --> data_processing
     data_processing --> data_science
+    data_science --> serving_model
+    data_science --> mlflow_server[ML Flow Models Serve]
+    mlflow_server --> streamlit[Streamlit App]
 ```
 
 ### Como as ferramentas Streamlit, MLflow, PyCaret e Scikit-Learn auxiliam na construção dos pipelines?
 
-🧪 Rastreamento de Experimentos (Experiment Tracking)
+Rastreamento de Experimentos (Experiment Tracking)
 
-- MLflow é utilizado para rastrear cada execução (run) dos experimentos, registrando hiperparâmetros, métricas (como log_loss e f1_score), artefatos (como o modelo treinado) e versões dos dados e código utilizados.
-- O Kedro facilita a integração desses experimentos em pipelines reprodutíveis e versionados.
+- MLflow é utilizado para na etapa de rastreamento dos experimentos, registrando hiperparâmetros, métricas (no caso deste projeto log_loss e f1_score são métricas sendo registradas), artefatos (como o modelo treinado, plots), versões das dependências, etc.
+- A integração do kedro-mlflow foi utilizada no projeto facilitando o processo de registro dos experimentos por meio da execução das pipelines.
 
-⚙️ Funções de Treinamento
+Funções de Treinamento
 
-- PyCaret simplifica a criação, comparação, tuning e validação de múltiplos modelos de classificação com poucas linhas de código.
-- Scikit-Learn é utilizado nos bastidores do PyCaret e também diretamente para etapas de pré-processamento personalizadas ou no pós-processamento.
-- As funções de treinamento são integradas ao pipeline do Kedro, que garante modularidade e organização.
+- PyCaret é uma ferramenta de AutoML que simplifica a criação, comparação, tuning e validação de múltiplos modelos de classificação.
+- O PyCaret tem o Scikit-Learn como dependência que auxilia na parte do treinamento, preparação dos dados, pré e pós-processamento.
+- Neste projeto, o PyCaret foi utilizado para separação de treino e teste (nos bastidores é utilizado o Scikit-learn) e também para a parte de treinamento do modelo, assim como obtenção das métricas que foram posteriormente salvas no MLFlow.
 
-📈 Monitoramento da Saúde do Modelo
+Monitoramento da Saúde do Modelo
 
-- Utilizamos MLflow para registrar métricas de desempenho que ajudam a monitorar a saúde do modelo ao longo do tempo.
-- Em produção, a saúde pode ser acompanhada via métricas como log_loss, f1_score, proporção de classes previstas, entre outras, comparadas com as dos dados de treino.
+- O monitoramento da saúde do modelo pode ser feito por meio da análise de Data Drift, Feature Drift e Concept Drift. Essas mudanças são identificadas através de comparações estatísticas entre dados históricos e novos () e pelo monitoramento contínuo das métricas de performance.
+- Atualmente, estamos registrando as métricas utilizando o MLFlow, então a cada versão do modelo treinado podemos realizar a comparação dessas métricas. Caso a gente queira fazer uma análise mais detalhada de drift, precisaríamos fazer a coleta e armazenamento dos dados para podermos aplicar por exemplo testes de Kolmogorov-Smirnov ou Qui-quadrado.
 
-🔁 Atualização de Modelo
+Atualização de Modelo
 
-- O pipeline foi estruturado para permitir reexecuções programadas ou sob demanda (reativo ou preditivo).
-- Alterações no conjunto de dados de produção podem ser detectadas com data drift e model drift, sinalizando a necessidade de retreinamento.
-- O modelo pode ser atualizado automaticamente com novos dados rotulados, com logs completos sendo mantidos pelo MLflow.
+- Ao rodar a pipeline `data_science` ocorre o treinamento do modelo e o armazenamento de uma nova versão do modelo treinado no MLFlow Model Registry.
+- Uma vez disponibilizada a nova versão pelo MLFlow, podemos servir este modelo com `mlflow models serve -m models:/logistic-regression-model/latest -p 5001`
+- Com o Streamlit podemos consumir o modelo. Como estamos passando `latest` ao servir o modelo, garantimos que sempre estaremos consumindo o último modelo disponível.
 
-🚀 Provisionamento (Deployment)
+Provisionamento (Deployment)
 
 - O modelo é versionado e registrado no MLflow Model Registry.
 - Pode ser servido via API local com mlflow models serve ou embarcado diretamente na aplicação Streamlit, garantindo inferência direta.
