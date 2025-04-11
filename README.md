@@ -126,7 +126,7 @@ Estrutura do Projeto
 
 # Diagrama
 
-Abaixo encontra-se o diagrama contendo todas as etapas necessárias para este projeto que vai desde a pipeline de aquisição até a operação do modelo:
+Abaixo encontra-se o diagrama contendo todas as etapas necessárias para este projeto que vai desde a pipeline de aquisição até a operação do modelo. Caso deseje olhar as pipelines separadamente e em alta resolução, pode-se encontrar as imagens na pasta [/docs](https://github.com/thealexandrelara/project-infnet-engenharia-de-machine-learning/tree/main/docs) do repositório.
 
 ```mermaid
 flowchart
