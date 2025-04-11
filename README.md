@@ -8,13 +8,19 @@ Link do repositório:
 https://github.com/thealexandrelara/project-infnet-engenharia-de-machine-learning
 ```
 
+# Rúbricas do projeto
+
+Para facilitar a avaliação, desenvolvi uma documentação estruturada com base nas rúbricas do projeto, contendo explicações detalhadas de como cada critério foi atendido ao longo do desenvolvimento:
+
+Link: https://github.com/thealexandrelara/project-infnet-engenharia-de-machine-learning/blob/main/docs/rubricas.md
+
 ⸻
 
-🚀 Instalação e Execução do Projeto
+# Instalação e Execução do Projeto
 
 Este projeto foi desenvolvido em Python 3.10 e utiliza as bibliotecas Kedro, kedro-mlflow, PyCaret, MLflow, e Streamlit. Para facilitar a gestão de dependências e o ambiente virtual, é recomendado o uso do `uv`.
 
-# Pré-requisitos
+## Pré-requisitos
 
     • Python 3.10 instalado
     • uv instalado (instruções para instalação podem ser encontradas (aqui)[https://docs.astral.sh/uv/getting-started/installation/#installing-uv])
@@ -244,7 +250,7 @@ Dados recebidos diretamente da fonte (Github API), sem qualquer tipo de tratamen
 
 raw_kobe_shots_dev
 
-    Descrição: Dataset de desenvolvimento contendo os dados históricos de arremessos do Kobe Bryant utilizados para treinamento e validação do modelo.
+    Objetivo: Dataset de desenvolvimento contendo os dados históricos de arremessos do Kobe Bryant utilizados para treinamento e validação do modelo.
     - Formato: .parquet
     - Localização: data/01_raw/dataset_kobe_dev.parquet
     - Colunas:
@@ -273,7 +279,7 @@ raw_kobe_shots_dev
 
 raw_kobe_shots_prod
 
-    Descrição: Dataset de produção contendo novos dados para aplicação do modelo treinado. Utilizado na etapa de predição e monitoramento.
+    Objetivo: Dataset de produção contendo dados diferentes em relação ao dataset utilizado no treino. Será utilizado para aplicar o modelo de produção e fazer análise da aderência dessa base ao modelo treinado.
     - Formato: .parquet
     - Localização: data/01_raw/dataset_kobe_prod.parquet
     - Colunas: Mesmo schema do raw_kobe_shots_dev.
@@ -284,8 +290,8 @@ Conjunto de dados que passaram por etapas de limpeza, transformação e codifica
 
 preprocessed_kobe_shots
 
-    Descrição: Dados de desenvolvimento após o pré-processamento inicial (ex: remoção de colunas irrelevantes, tratamento de valores nulos, conversão de tipos, encoding de variáveis categóricas).
-    - Finalidade: Servirá como base para geração da tabela de entrada do modelo. Alterei o nome da coluna `lon` para `lng` para atender o especificado no projeto.
+    Descrição: Dados de desenvolvimento após o pré-processamento inicial (ex: renomear colunas, etc).
+    - Objetivo: Servirá como base para geração da tabela de entrada do modelo. Alterei o nome da coluna `lon` para `lng` para atender o especificado no projeto.
     - Formato: .parquet
     - Localização: data/02_intermediate/preprocessed_kobe_shots.parquet
     - Colunas:
@@ -314,7 +320,7 @@ preprocessed_kobe_shots
 
 preprocessed_kobe_shots_prod
 
-    - Descrição: Versão de produção dos dados pré-processados, com as mesmas transformações aplicadas ao dataset de desenvolvimento.
+    - Descrição: Versão de produção dos dados pré-processados, com as mesmas transformações aplicadas ao dataset de desenvolvimento. A ideia é facilitar a sua utilização com o modelo treinado.
     - Finalidade: Alimentar o modelo final em ambiente de aplicação.
     - Formato: .parquet
     - Localização: data/02_intermediate/preprocessed_kobe_shots_prod.parquet
@@ -360,18 +366,18 @@ Modelos treinados e salvos com MLflow, prontos para uso em produção ou experim
 
 logistic_regression_model
 
-    - Descrição: Modelo de regressão logística treinado com scikit-learn, salvo via MLflow para rastreamento.
+    - Descrição: Modelo de regressão logística treinado com scikit-learn, salvo via MLflow para rastreamento. Trata-se do modelo escolhido para fazer a predição de arremessos.
     - Uso: Versão padrão para predições com .predict().
     - Registro no MLflow: logistic-regression-model
 
 logistic_regression_model_with_proba
 
-    - Descrição: Mesmo modelo da regressão logística, mas configurado para retornar probabilidades com .predict_proba().
+    - Descrição: Mesmo modelo da regressão logística, mas configurado para retornar probabilidades com .predict_proba() que é utilizado para cálculo do log_loss.
     - Registro no MLflow: logistic-regression-model-dev
 
 logistic_regression_model_dev
 
-    - Descrição: Acesso à última versão do modelo de regressão logística registrada no MLflow Model Registry como logistic-regression-model-dev.
+    - Descrição: Acesso ao modelo de regressão logística com .predict_proba() registrada no MLflow Model Registry como logistic-regression-model-dev.
 
 decision_tree_model
 
