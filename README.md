@@ -1,5 +1,117 @@
 Projeto de machine learning com o objetivo de prever se Kobe Bryant acertou ou errou uma tentativa de arremesso, utilizando abordagens de classificação e regressão. O projeto é baseado no dataset [Kobe Bryant Shot Selectio](https://www.kaggle.com/c/kobe-bryant-shot-selection/overview), disponível no Kaggle.
 
+Perfeito! Aqui está um exemplo bem organizado da seção de Instalação e Execução para o seu README.md, seguindo suas instruções:
+
+⸻
+
+🚀 Instalação e Execução do Projeto
+
+Este projeto foi desenvolvido em Python 3.10 e utiliza as bibliotecas Kedro, kedro-mlflow, PyCaret, MLflow, e Streamlit. Para facilitar a gestão de dependências e o ambiente virtual, é recomendado o uso do `uv`.
+
+# Pré-requisitos
+
+    • Python 3.10 instalado
+    • uv instalado (instruções para instalação podem ser encontradas (aqui)[https://docs.astral.sh/uv/getting-started/installation/#installing-uv])
+
+#### Instalação do projeto
+
+Clone o repositório e instale as dependências:
+
+```bash
+git clone https://github.com/thealexandrelara/project-infnet-engenharia-de-machine-learning
+```
+
+```
+cd project-infnet-engenharia-de-machine-learning
+```
+
+#### Instale as dependências listadas em pyproject.toml
+
+```bash
+uv add -r requirements.txt
+```
+
+#### Instale o Kedro como ferramenta para fazer uso do CLI
+
+```bash
+uv tool install kedro
+```
+
+⸻
+
+# Execução dos Pipelines
+
+Este projeto está organizado em pipelines modulares do Kedro, e utiliza o kedro-mlflow para registrar os experimentos corretamente. Por isso, as pipelines **devem ser executadas individualmente** para garantir que o nome de cada run no MLflow seja registrado de forma apropriada.
+
+Pipelines no projeto:
+
+1. Coleta de Dados:
+
+```bash
+kedro run --pipeline data_ingestion
+```
+
+2. Processamento de Dados:
+
+```bash
+kedro run --pipeline data_processing
+```
+
+3. Treinamento do Modelo:
+
+```bash
+kedro run --pipeline data_science
+```
+
+4. Pipeline de execução do modelo previamente treinado:
+
+```bash
+kedro run --pipeline serving_model
+```
+
+⸻
+
+#### Servindo o Modelo com MLflow
+
+Após o treinamento, você pode servir o modelo com o MLflow diretamente da interface local:
+
+```bash
+mlflow models serve -m models:/logistic-regression-model/latest -p 5001
+```
+
+Dessa forma, você tem acesso a http://127.0.0.1:5001/invocations para inferências via API REST. Esta etapa é obrigatória para o funcionamento adequado do Streamlit.
+
+⸻
+
+Interface com Streamlit
+
+Com o modelo já sendo servido, você pode rodar a interface para inferência com Streamlit:
+
+```bash
+streamlit run streamlit/app.py
+```
+
+A aplicação irá consumir o modelo via API exposta pelo MLflow.
+
+⸻
+
+Estrutura do Projeto
+
+```
+├── conf/                         - pasta contendo configurações do kedro e mlflow
+├── data/                         - pasta onde os outputs de cada nó são salvos
+├── docs/                         - pasta com tudo relacionado a documentação
+├── notebooks/                - pasta com os jupyter notebooks utilizados para exploração e testes
+├── src/                           - pasta com o código fonte das pipelines e nós
+├── streamlit/                  - aplicação Streamlit para inferência do modelo
+│ └── app.py
+├── README.md           - documentação principal do projeto
+├── pyproject.toml
+└── requirements.txt
+```
+
+⸻
+
 # Diagrama
 
 Abaixo encontra-se o diagrama contendo todas as etapas necessárias para este projeto que vai desde a pipeline de aquisição até a operação do modelo:
@@ -103,7 +215,7 @@ Funções de Treinamento
 
 Monitoramento da Saúde do Modelo
 
-- O monitoramento da saúde do modelo pode ser feito por meio da análise de Data Drift, Feature Drift e Concept Drift. Essas mudanças são identificadas através de comparações estatísticas entre dados históricos e novos () e pelo monitoramento contínuo das métricas de performance.
+- O monitoramento da saúde do modelo pode ser feito por meio da análise de Data Drift, Feature Drift e Concept Drift. Essas mudanças são identificadas através de comparações estatísticas entre dados históricos e novos dados e pelo monitoramento contínuo das métricas de performance.
 - Atualmente, estamos registrando as métricas utilizando o MLFlow, então a cada versão do modelo treinado podemos realizar a comparação dessas métricas. Caso a gente queira fazer uma análise mais detalhada de drift, precisaríamos fazer a coleta e armazenamento dos dados para podermos aplicar por exemplo testes de Kolmogorov-Smirnov ou Qui-quadrado.
 
 Atualização de Modelo
@@ -167,24 +279,28 @@ preprocessed_kobe_shots
     - Formato: .parquet
     - Localização: data/02_intermediate/preprocessed_kobe_shots.parquet
     - Colunas:
-        - action_type: tipo específico do arremesso (ex: Jump Shot, Layup).
-        - combined_shot_type: tipo genérico do arremesso (ex: 2PT Field Goal).
-        - game_event_id: identificador do evento do jogo.
-        - game_id: identificador único do jogo.
-        - lat, lng: coordenadas geográficas da tentativa.
-        - loc_x, loc_y: coordenadas cartesianas da tentativa.
-        - minutes_remaining, seconds_remaining: tempo restante no período.
-        - period: número do período (1 a 4, ou prorrogações).
-        - playoffs: flag indicando se é jogo de playoff.
-        - season: temporada (ex: 2010-11).
-        - shot_distance: distância do arremesso ao cesto.
-        - shot_made_flag: variável-alvo (1 para acerto, 0 para erro).
-        - shot_type, shot_zone_area, shot_zone_basic, shot_zone_range: informações sobre a localização e tipo do arremesso.
-        - team_id, team_name: identificadores do time.
-        - game_date: data do jogo.
-        - matchup: descrição do confronto (ex: LAL vs BOS).
-        - opponent: time adversário.
-        - shot_id: identificador único do arremesso.
+        - action_type: tipo específico do arremesso ([categórica nominal] ex: Jump Shot, Layup).
+        - combined_shot_type: tipo genérico do arremesso ([categórica nominal] ex: Jump Shot).
+        - game_event_id: identificador do evento do jogo ([numérica discreta] ex: 10, 12).
+        - game_id: identificador único do jogo ([numérica discreta] ex: 20000012).
+        - lat, lng: coordenadas geográficas da tentativa ([numérica contínua] ex: 33.9723, -118.1028).
+        - loc_x, loc_y: coordenadas cartesianas da tentativa ([numérica contínua] ex: 33.9723, -118.1028).
+        - minutes_remaining, seconds_remaining: tempo restante no período ([numérica discreta] ex: 2, 12).
+        - period: número do período ([numérica discreta] ex: 1 a 4, ou prorrogações).
+        - playoffs: flag indicando se é jogo de playoff ([categórica binária] ex: 0 temporada regular, 1 para playoffs).
+        - season: temporada ([categórica ordinal] ex: 2010-11).
+        - shot_distance: distância do arremesso ao cesto ([numérica discreta] ex: 30, 55).
+        - shot_made_flag: variável-alvo ([categórica binária] ex: 1 para acerto, 0 para erro).
+        - shot_type: Tipo de arremesso ([categórica nominal] ex: 2PT ou 3PT)
+        - shot_zone_area: Área lateral da quadra ([categórica nominal]ex: Right Side, Left Side)
+        - shot_zone_basic: Tipo de região ([categórica nominal] ex: Mid-Range, Restricted Area, etc)
+        - shot_zone_range: Faixa de distância ([categórica ordinal] ex: Less Than 8 ft., 8-16 ft., 16-24 ft., etc)
+        - team_id: Identificador do time ([categórica nominal] ex: Los Angeles Lakers)
+        - team_name: identificadores do time ([categórica nominal] ex: 1610612747).
+        - game_date: data do jogo ([temporal] ex: 2000-10-31).
+        - matchup: descrição do confronto ([categórica nominal] ex: LAL vs BOS).
+        - opponent: time adversário ([categórica nominal] ex: POR).
+        - shot_id: identificador único do arremesso ([numérica discreta] ex: 12).
 
 preprocessed_kobe_shots_prod
 
@@ -218,6 +334,7 @@ base_train
     - Finalidade: Treinar modelos de machine learning com PyCaret.
     - Formato: .parquet
     - Localização: data/03_primary/base_train.parquet
+    - Colunas: mesmo schema da `model_input_table` descrita acima.
 
 base_test
 
@@ -225,8 +342,9 @@ base_test
     - Finalidade: Calcular métricas como log_loss e f1_score durante o experimento.
     - Formato: .parquet
     - Localização: data/03_primary/base_test.parquet
+    - Colunas: mesmo schema da `model_input_table` descrita acima.
 
-🤖 Camada data_science – Modelos e experimentos
+#### Camada data_science
 
 Modelos treinados e salvos com MLflow, prontos para uso em produção ou experimentação. Inclui versões com e sem probabilidade, além dos registros no MLflow Model Registry.
 
@@ -250,7 +368,7 @@ decision_tree_model
     - Descrição: Modelo de árvore de decisão treinado e salvo via MLflow.
     - Registro no MLflow: decision-tree-model
 
-Camada reporting – Relatórios e visualizações
+#### Camada reporting
 
 Artefatos visuais gerados para análise dos modelos, como AUC, matriz de confusão e importância das variáveis.
 
