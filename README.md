@@ -2,6 +2,12 @@ Projeto de machine learning com o objetivo de prever se Kobe Bryant acertou ou e
 
 Perfeito! Aqui está um exemplo bem organizado da seção de Instalação e Execução para o seu README.md, seguindo suas instruções:
 
+Link do repositório:
+
+```
+https://github.com/thealexandrelara/project-infnet-engenharia-de-machine-learning
+```
+
 ⸻
 
 🚀 Instalação e Execução do Projeto
@@ -232,7 +238,7 @@ Provisionamento (Deployment)
 
 ## Artefatos
 
-### Camada raw – Dados brutos
+### Camada raw
 
 Dados recebidos diretamente da fonte (Github API), sem qualquer tipo de tratamento ou pré-processamento. A pipeline utilizada foi `data_ingestion`.
 
@@ -310,9 +316,9 @@ preprocessed_kobe_shots_prod
     - Localização: data/02_intermediate/preprocessed_kobe_shots_prod.parquet
     - Colunas: mesmo esquema do `preprocessed_kobe_shots`
 
-#### Camada primary – Dados prontos para treino/teste
+#### Camada primary
 
-Dados já organizados com as features selecionadas, normalizadas e estruturadas para alimentar algoritmos de Machine Learning.
+Dados já organizados com as features selecionadas, normalizadas e estruturadas para alimentar os algoritmos de ML.
 
 model_input_table
 
@@ -344,9 +350,9 @@ base_test
     - Localização: data/03_primary/base_test.parquet
     - Colunas: mesmo schema da `model_input_table` descrita acima.
 
-#### Camada data_science
+#### Artefatos no MLFlow
 
-Modelos treinados e salvos com MLflow, prontos para uso em produção ou experimentação. Inclui versões com e sem probabilidade, além dos registros no MLflow Model Registry.
+Modelos treinados e salvos com MLflow, prontos para uso em produção ou experimentação. Inclui versões com e sem probabilidades, além dos registros no MLflow Model Registry.
 
 logistic_regression_model
 
