@@ -1,4 +1,4 @@
-Projeto de machine learning com o objetivo de prever se Kobe Bryant acertou ou errou uma tentativa de arremesso, utilizando abordagens de classificação e regressão. O projeto é baseado no dataset [Kobe Bryant Shot Selectio](https://www.kaggle.com/c/kobe-bryant-shot-selection/overview), disponível no Kaggle.
+Projeto de machine learning com o objetivo de prever se Kobe Bryant acertou ou errou uma tentativa de arremesso, utilizando abordagens de classificação e regressão. O projeto é baseado no dataset [Kobe Bryant Shot Selection](https://www.kaggle.com/c/kobe-bryant-shot-selection/overview), disponível no Kaggle.
 
 Perfeito! Aqui está um exemplo bem organizado da seção de Instalação e Execução para o seu README.md, seguindo suas instruções:
 
