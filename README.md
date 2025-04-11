@@ -154,7 +154,7 @@ raw_kobe_shots_prod
     Descrição: Dataset de produção contendo novos dados para aplicação do modelo treinado. Utilizado na etapa de predição e monitoramento.
     - Formato: .parquet
     - Localização: data/01_raw/dataset_kobe_prod.parquet
-    - Composição: Mesmo schema do raw_kobe_shots_dev, porém com registros distintos que representam novos dados ainda não utilizados no treinamento.
+    - Colunas: Mesmo schema do raw_kobe_shots_dev.
 
 #### Camada intermediate – Dados pré-processados
 
@@ -163,9 +163,28 @@ Conjunto de dados que passaram por etapas de limpeza, transformação e codifica
 preprocessed_kobe_shots
 
     Descrição: Dados de desenvolvimento após o pré-processamento inicial (ex: remoção de colunas irrelevantes, tratamento de valores nulos, conversão de tipos, encoding de variáveis categóricas).
-    - Finalidade: Servirá como base para geração da tabela de entrada do modelo.
+    - Finalidade: Servirá como base para geração da tabela de entrada do modelo. Alterei o nome da coluna `lon` para `lng` para atender o especificado no projeto.
     - Formato: .parquet
     - Localização: data/02_intermediate/preprocessed_kobe_shots.parquet
+    - Colunas:
+        - action_type: tipo específico do arremesso (ex: Jump Shot, Layup).
+        - combined_shot_type: tipo genérico do arremesso (ex: 2PT Field Goal).
+        - game_event_id: identificador do evento do jogo.
+        - game_id: identificador único do jogo.
+        - lat, lng: coordenadas geográficas da tentativa.
+        - loc_x, loc_y: coordenadas cartesianas da tentativa.
+        - minutes_remaining, seconds_remaining: tempo restante no período.
+        - period: número do período (1 a 4, ou prorrogações).
+        - playoffs: flag indicando se é jogo de playoff.
+        - season: temporada (ex: 2010-11).
+        - shot_distance: distância do arremesso ao cesto.
+        - shot_made_flag: variável-alvo (1 para acerto, 0 para erro).
+        - shot_type, shot_zone_area, shot_zone_basic, shot_zone_range: informações sobre a localização e tipo do arremesso.
+        - team_id, team_name: identificadores do time.
+        - game_date: data do jogo.
+        - matchup: descrição do confronto (ex: LAL vs BOS).
+        - opponent: time adversário.
+        - shot_id: identificador único do arremesso.
 
 preprocessed_kobe_shots_prod
 
@@ -173,6 +192,7 @@ preprocessed_kobe_shots_prod
     - Finalidade: Alimentar o modelo final em ambiente de aplicação.
     - Formato: .parquet
     - Localização: data/02_intermediate/preprocessed_kobe_shots_prod.parquet
+    - Colunas: mesmo esquema do `preprocessed_kobe_shots`
 
 #### Camada primary – Dados prontos para treino/teste
 
@@ -184,6 +204,13 @@ model_input_table
     - Formato: .parquet
     - Localização: data/03_primary/data_filtered.parquet
     - Dimensão: 20285 registros (linhas) e 7 colunas
+    - Colunas:
+        - lat, lng: coordenadas geográficas da tentativa.
+        - minutes_remaining: tempo restante no período.
+        - period: número do período (1 a 4, ou prorrogações).
+        - playoffs: flag indicando se é jogo de playoff.
+        - shot_distance: distância do arremesso ao cesto.
+        - shot_made_flag: variável-alvo (1 para acerto, 0 para erro).
 
 base_train
 
@@ -295,4 +322,16 @@ Considerando isso, dá pra notar que são variáveis relacionadas com o posicion
 
 ## Monitoramento de saúde do modelo com e sem a disponibilidade da variável resposta
 
-No caso de termos a variável resposta, podemos fazer o monitoramento das próprias métricas log_loss, F1 Score, Precision, Recall, etc., e dessa forma detectar rapidamente a degradação do modelo. Se a variável resposta não está disponível, podemos adotar diferentes estratégias de monitoramento como da relação das features (data drift), técnicas de detecção de conceito (concept drift), analisar mudança semântica em alguma coluna (feature drift), etc.
+No caso de termos a variável resposta, podemos fazer o monitoramento periódico do desempenho por meio das próprias métricas log_loss, F1 Score, Precision, Recall, etc., e dessa forma detectar rapidamente a degradação do modelo. Podemos criar um dashboard de desempenho ou formas de receber alertas quando as métricas caírem abaixo de valores aceitáveis.
+
+Se a variável resposta não está disponível, podemos adotar diferentes estratégias de monitoramento como da distribuição de mudanças na distribuição dos dados de entrada (data drift), aplicar testes estatísticos como Kolmogorov-Smirnov, monitorar as saídas do modelo (concept drift), etc.
+
+## Estratégias de retreinamento
+
+Estratégia Reativa
+
+- Com base no monitoramento do modelo em produção, pode ser que seja detectada uma degradação no modelo e com base nisso seja necessário um retreinamento, por exemplo, degradação de alguma métrica ou se houver algum desvio estatístico nas variáveis de entrada. O retreino ocorre após a detecção do problema.
+
+Estratégia Preditiva
+
+- Periodicamente ocorre o retreino do modelo, podendo incluir dados de fontes diferentes, dados simulados, dados que foram rotulados posterior ao modelo anterior, isso contribui pra manter o modelo atualizado. Se ocorrer uma detecção de drift, também pode ser feito o retreino. O retreino ocorre por antecipação.
