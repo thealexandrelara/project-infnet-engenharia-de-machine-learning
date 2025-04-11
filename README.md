@@ -248,24 +248,28 @@ raw_kobe_shots_dev
     - Formato: .parquet
     - Localização: data/01_raw/dataset_kobe_dev.parquet
     - Colunas:
-        - action_type: tipo específico do arremesso (ex: Jump Shot, Layup).
-        - combined_shot_type: tipo genérico do arremesso (ex: 2PT Field Goal).
-        - game_event_id: identificador do evento do jogo.
-        - game_id: identificador único do jogo.
-        - lat, lon: coordenadas geográficas da tentativa.
-        - loc_x, loc_y: coordenadas cartesianas da tentativa.
-        - minutes_remaining, seconds_remaining: tempo restante no período.
-        - period: número do período (1 a 4, ou prorrogações).
-        - playoffs: flag indicando se é jogo de playoff.
-        - season: temporada (ex: 2010-11).
-        - shot_distance: distância do arremesso ao cesto.
-        - shot_made_flag: variável-alvo (1 para acerto, 0 para erro).
-        - shot_type, shot_zone_area, shot_zone_basic, shot_zone_range: informações sobre a localização e tipo do arremesso.
-        - team_id, team_name: identificadores do time.
-        - game_date: data do jogo.
-        - matchup: descrição do confronto (ex: LAL vs BOS).
-        - opponent: time adversário.
-        - shot_id: identificador único do arremesso.
+        - action_type: tipo específico do arremesso ([categórica nominal] ex: Jump Shot, Layup).
+        - combined_shot_type: tipo genérico do arremesso ([categórica nominal] ex: Jump Shot).
+        - game_event_id: identificador do evento do jogo ([numérica discreta] ex: 10, 12).
+        - game_id: identificador único do jogo ([numérica discreta] ex: 20000012).
+        - lat, lng: coordenadas geográficas da tentativa ([numérica contínua] ex: 33.9723, -118.1028).
+        - loc_x, loc_y: coordenadas cartesianas da tentativa ([numérica contínua] ex: 33.9723, -118.1028).
+        - minutes_remaining, seconds_remaining: tempo restante no período ([numérica discreta] ex: 2, 12).
+        - period: número do período ([numérica discreta] ex: 1 a 4, ou prorrogações).
+        - playoffs: flag indicando se é jogo de playoff ([categórica binária] ex: 0 temporada regular, 1 para playoffs).
+        - season: temporada ([categórica ordinal] ex: 2010-11).
+        - shot_distance: distância do arremesso ao cesto ([numérica discreta] ex: 30, 55).
+        - shot_made_flag: variável-alvo ([categórica binária] ex: 1 para acerto, 0 para erro).
+        - shot_type: Tipo de arremesso ([categórica nominal] ex: 2PT ou 3PT)
+        - shot_zone_area: Área lateral da quadra ([categórica nominal]ex: Right Side, Left Side)
+        - shot_zone_basic: Tipo de região ([categórica nominal] ex: Mid-Range, Restricted Area, etc)
+        - shot_zone_range: Faixa de distância ([categórica ordinal] ex: Less Than 8 ft., 8-16 ft., 16-24 ft., etc)
+        - team_id: Identificador do time ([categórica nominal] ex: Los Angeles Lakers)
+        - team_name: identificadores do time ([categórica nominal] ex: 1610612747).
+        - game_date: data do jogo ([temporal] ex: 2000-10-31).
+        - matchup: descrição do confronto ([categórica nominal] ex: LAL vs BOS).
+        - opponent: time adversário ([categórica nominal] ex: POR).
+        - shot_id: identificador único do arremesso ([numérica discreta] ex: 12).
 
 raw_kobe_shots_prod
 
@@ -327,12 +331,12 @@ model_input_table
     - Localização: data/03_primary/data_filtered.parquet
     - Dimensão: 20285 registros (linhas) e 7 colunas
     - Colunas:
-        - lat, lng: coordenadas geográficas da tentativa.
-        - minutes_remaining: tempo restante no período.
-        - period: número do período (1 a 4, ou prorrogações).
-        - playoffs: flag indicando se é jogo de playoff.
-        - shot_distance: distância do arremesso ao cesto.
-        - shot_made_flag: variável-alvo (1 para acerto, 0 para erro).
+        - lat, lng: coordenadas geográficas da tentativa ([numérica contínua] ex: 33.9723, -118.1028).
+        - minutes_remaining, seconds_remaining: tempo restante no período ([numérica discreta] ex: 2, 12).
+        - period: número do período ([numérica discreta] ex: 1 a 4, ou prorrogações).
+        - playoffs: flag indicando se é jogo de playoff ([categórica binária] ex: 0 temporada regular, 1 para playoffs).
+        - shot_distance: distância do arremesso ao cesto ([numérica discreta] ex: 30, 55).
+        - shot_made_flag: variável-alvo ([categórica binária] ex: 1 para acerto, 0 para erro).
 
 base_train
 
