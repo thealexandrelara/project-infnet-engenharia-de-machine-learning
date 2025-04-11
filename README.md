@@ -78,7 +78,7 @@ kedro run --pipeline data_science
 4. Pipeline de execução do modelo previamente treinado:
 
 ```bash
-kedro run --pipeline serving_model
+kedro run --pipeline model_serving
 ```
 
 ⸻
